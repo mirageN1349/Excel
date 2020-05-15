@@ -1,7 +1,7 @@
-import { ExcelComponent } from "@core/ExcelComponent";
+import { ExcelComponent } from '@core/ExcelComponent'
 
 export class Header extends ExcelComponent {
-  static className = "excel__header";
+  static className = 'excel__header'
 
   toHTML() {
     return ` 
@@ -14,6 +14,6 @@ export class Header extends ExcelComponent {
       <div class="button">
         <i class="material-icons">exit_to_app</i>
       </div>
-    </div>`;
+    </div>`
   }
 }

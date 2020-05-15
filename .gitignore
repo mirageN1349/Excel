@@ -1,3 +1,4 @@
 node_modules
 requierements.txt
 dist
+.prettierrc.js

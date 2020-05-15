@@ -11,7 +11,8 @@
     "object-curly-spacing": "off",
     "linebreak-style": "off",
     "require-jsdoc": "off",
-    "operator-linebreak": "off"
+    "operator-linebreak": "off",
+    "arrow-parens": [true, "ban-single-arg-parens"]
   },
   "extends": ["eslint:recommended", "google"]
 }
