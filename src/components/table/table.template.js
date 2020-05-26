@@ -1,3 +1,4 @@
+/* eslint-disable space-before-function-paren */
 /* eslint-disable indent */
 
 const CODES = {
@@ -5,12 +6,16 @@ const CODES = {
   Z: 90,
 }
 
-function toCell(_, col) {
-  return /* html*/ `<div
+function toCell(row) {
+  return function (_, col) {
+    return /* html*/ `<div
     class="cell"
     contenteditable="true"
-    data-col="${col}">
+    data-col="${col}"
+    data-type="cell"
+    data-id="${row}:${col}">
   </div>`
+  }
 }
 
 function toColumn(col, index) {
@@ -48,9 +53,9 @@ export function createTable(rowsCount = 49) {
 
   rows.push(createRow(null, cols))
 
-  for (let i = 0; i < rowsCount; i++) {
-    const cells = new Array(colsCount).fill('').map(toCell).join('')
-    rows.push(createRow(i + 1, cells))
+  for (let row = 0; row < rowsCount; row++) {
+    const cells = new Array(colsCount).fill('').map(toCell(row)).join('')
+    rows.push(createRow(row + 1, cells))
   }
 
   return rows.join('')
