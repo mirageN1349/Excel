@@ -4,17 +4,18 @@
 import { ExcelComponent } from '@core/ExcelComponent'
 import { createTable } from './table.template'
 import { resizeHandler } from './table.resize'
-import { shouldResize, isCell, matrix } from './table.functions'
+import { shouldResize, isCell, matrix, nextSelector } from './table.functions'
 import { TableSelection } from './TableSelection'
-import { $ } from '../../core/dom'
+import { $ } from '@core/dom'
 
 export class Table extends ExcelComponent {
   static className = 'excel__table'
 
-  constructor($root) {
+  constructor($root, options) {
     super($root, {
       name: 'Table',
-      listeners: ['mousedown'],
+      listeners: ['mousedown', 'keydown', 'input'],
+      ...options,
     })
   }
 
@@ -29,8 +30,20 @@ export class Table extends ExcelComponent {
   init() {
     super.init()
 
-    const $cell = this.$root.find('[data-id="0:0"]')
+    this.selectCell(this.$root.find('[data-id="0:0"]'))
+
+    this.$on('formula:input', text => {
+      this.selection.current.text(text)
+    })
+
+    this.$on('formula:done', () => {
+      this.selection.select(this.selection.current)
+    })
+  }
+
+  selectCell($cell) {
     this.selection.select($cell)
+    this.$emit('table:select', $cell)
   }
 
   onMousedown(event) {
@@ -47,5 +60,29 @@ export class Table extends ExcelComponent {
         this.selection.select($target)
       }
     }
+  }
+
+  onKeydown(event) {
+    const keys = [
+      'Enter',
+      'Tab',
+      'ArrowLeft',
+      'ArrowRight',
+      'ArrowUp',
+      'ArrowDown',
+    ]
+
+    const { key } = event
+
+    if (keys.includes(key) && !event.shiftKey) {
+      event.preventDefault()
+      const id = this.selection.current.id(true)
+      const $next = this.$root.find(nextSelector(key, id))
+      this.selectCell($next)
+    }
+  }
+
+  onInput(event) {
+    this.$emit('table:input', $(event.target))
   }
 }
